@@ -41,42 +41,52 @@ class MyApp extends StatelessWidget {
     FlutterNativeSplash.remove();
 
     return
-      ScreenUtilInit(
-          designSize: const Size(375,812),
-          minTextAdapt: true,
-          builder: (ctx,child) => MaterialApp(
-            themeMode: ThemeMode.light,
-            darkTheme: ThemeData(
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            theme: ThemeData(
-              appBarTheme: const AppBarTheme(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                      statusBarColor: Color(0xffdb234d),
-                      statusBarIconBrightness: Brightness.light
-                  )
-              ),
-              primaryColor: const Color(0xffdb234d),
-              primaryColorLight: const Color(0xffe76684),
-              dialogBackgroundColor: const Color(0xfff8d9e1),
-              cardColor: const Color(0xffFFE8E8),
-              secondaryHeaderColor: const Color(0xfff5d5dd),
-              fontFamily: "Poppins",
-              colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white10),
-            ),
-            debugShowCheckedModeBanner: false,
-            home: LoginScreen(),
-            // initialRoute: AppPages.INITIAL,
-            // getPages: AppPages.routes,
+    FutureBuilder(
+        future: _initializeFirebase(),
+        builder: (context, snapshot){
+          if(snapshot.connectionState == ConnectionState.done){
+            return ScreenUtilInit(
+                designSize: const Size(375,812),
+                minTextAdapt: true,
+                builder: (ctx,child) => MaterialApp(
+                  themeMode: ThemeMode.light,
+                  darkTheme: ThemeData(
+                    appBarTheme: const AppBarTheme(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                  theme: ThemeData(
+                    appBarTheme: const AppBarTheme(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        systemOverlayStyle: SystemUiOverlayStyle(
+                            statusBarColor: Color(0xffdb234d),
+                            statusBarIconBrightness: Brightness.light
+                        )
+                    ),
+                    primaryColor: const Color(0xffdb234d),
+                    primaryColorLight: const Color(0xffe76684),
+                    dialogBackgroundColor: const Color(0xfff8d9e1),
+                    cardColor: const Color(0xffFFE8E8),
+                    secondaryHeaderColor: const Color(0xfff5d5dd),
+                    fontFamily: "Poppins",
+                    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white10),
+                  ),
+                  debugShowCheckedModeBanner: false,
+                  home: LoginScreen(),
+                  // initialRoute: AppPages.INITIAL,
+                  // getPages: AppPages.routes,
 
-            // initialBinding: Bindings.,
-          )
-      );
+                  // initialBinding: Bindings.,
+                )
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
   }
 }
 

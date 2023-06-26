@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled/view/profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,8 +11,26 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  static Future<User?> loginUsingEmailPassword({required String email, required String password, required BuildContext context}) async{
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try{
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      user = userCredential.user;
+    }on FirebaseAuthException catch(e){
+      if(e.code == "user-not-found"){
+        print("No User Found");
+      }
+    }
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    TextEditingController _emailController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
     bool isChecked = false;
 
     return SafeArea(
@@ -81,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Container(
                           width: 310,
                           child: TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               border: UnderlineInputBorder(),
                               hintText: 'Enter User ID or Email',
@@ -105,6 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Container(
                           width: 310,
                           child: TextField(
+                            controller: _passwordController,
                             decoration: InputDecoration(
                               border: UnderlineInputBorder(),
                               hintText: 'Enter Password',
@@ -148,25 +170,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     Positioned(
                         top: 365,
                         right: 60,
-                        child: Container(
-                          width: 99,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF024335),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 6.0),
-                            child: Text(
-                              'Sign In',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontFamily: 'Poppins-Medium',
-                                  fontWeight: FontWeight.w400),
+                        child: RawMaterialButton(
+                          onPressed: () async{
+                            User? user = await loginUsingEmailPassword(email: _emailController.text, password: _passwordController.text, context: context);
+                            print(user);
+                            if(user != null){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                            }
+                          },
+                          child: Container(
+                            width: 99,
+                            height: 35,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF024335),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
+                              child: Text(
+                                'Sign In',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontFamily: 'Poppins-Medium',
+                                    fontWeight: FontWeight.w400),
+                              ),
                             ),
                           ),
                         )),
