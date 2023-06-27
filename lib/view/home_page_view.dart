@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:untitled/view/profile_screen.dart';
+import 'package:untitled/view/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               User? user = await loginUsingEmailPassword(email: _emailController.text, password: _passwordController.text, context: context);
                               print(user);
                               if(user != null){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainScreen(_emailController.text)));
                               }
                             },
                             child: Container(
