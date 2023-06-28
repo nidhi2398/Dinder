@@ -43,9 +43,10 @@ dependencies:
   get: ^4.6.5
   firebase_messaging: ^14.6.4
   http: ^1.1.0
-  swipe_to: ^1.0.2
   flutter_swipe_detector: ^2.0.0
   shared_preferences: ^2.1.2
+  swipe_cards: ^2.0.0+1
+  appinio_swiper: ^2.0.2
 
 dev_dependencies:
   flutter_test:

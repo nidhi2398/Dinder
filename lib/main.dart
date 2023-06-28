@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled/view/home_page_view.dart';
+import 'package:untitled/view/swipe.dart';
 
 
 Future<void> main() async{
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
                     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white10),
                   ),
                   debugShowCheckedModeBanner: false,
-                  home: LoginScreen(),
+                  home: Swipe(),
                   // initialRoute: AppPages.INITIAL,
                   // getPages: AppPages.routes,
 
@@ -96,6 +97,6 @@ class MyHttpOverrides extends HttpOverrides{
   @override
   HttpClient createHttpClient(SecurityContext? context){
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> host=="tifinco.com"?true:false;
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> host=="dinder.com"?true:false;
   }
 }

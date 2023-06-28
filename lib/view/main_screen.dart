@@ -4,9 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:swipe_to/swipe_to.dart';
 
 class MainScreen extends StatefulWidget {
   String email;
@@ -22,8 +20,10 @@ class _MainScreenState extends State<MainScreen> {
   int _red_heart = 0;
   int black_heart = 0;
   int blue_heart = 0;
-  int? saveValue;
-  var _dog = "https://images.dog.ceo/breeds/shihtzu/n02086240_4544.jpg";
+  int? saveRedHeart;
+  int? saveBlueHeart;
+  int? saveBlackHeart;
+  var _dog = "";
 
   static const int _swipeHistoryLimit = 4;
   final List<SwipeDirection> _swipeHistory = [];
@@ -38,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void initState(){
     super.initState();
+    fetchDog();
     getHeart();
   }
 
@@ -45,16 +46,18 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: fetchDog,
-        ),
-        body: Center(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: fetchDog,
+        // ),
+        body: SingleChildScrollView(
+          // height: MediaQuery.of(context).size.height,
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: 60.h,
+                height: 60,
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -84,8 +87,8 @@ class _MainScreenState extends State<MainScreen> {
                     Column(
                       children: [
                         Icon(CupertinoIcons.heart_solid,color: Colors.red, size: 36,),
-                        saveValue == null ? Text('0', style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600)):
-                        Text(saveValue.toString(), style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600),)
+                        // _red_heart == null ? Text('0', style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600)):
+                        Text(_red_heart.toString(), style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600),)
                       ],
                     ),
                     Column(
@@ -124,76 +127,78 @@ class _MainScreenState extends State<MainScreen> {
               SizedBox(
                 height: 40,
               ),
-              SwipeDetector(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  height: 400,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.black26,
-                        width: 2.0,
-                        style: BorderStyle.solid
-                    ), //Border.all
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0),
-                      bottomLeft: Radius.circular(10.0),
-                      bottomRight: Radius.circular(10.0),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        offset: const Offset(
-                          1.0, 1.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
-                      ), //BoxShadow
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: const Offset(0.0, 0.0),
-                        blurRadius: 0.0,
-                        spreadRadius: 0.0,
-                      ), //BoxShadow
-                    ],
-                    image: DecorationImage(
-                      image: NetworkImage(_dog),
-                      fit: BoxFit.cover
-                    )
-                  ),
-                ),
-                onSwipeDown: (offset){
-                  _addSwipe(SwipeDirection.down);
-                  fetchDog();
-                  black_heart += 1;
-                  print(black_heart);
-                  print("2131tttttttttttt656735436");
-                },
-                onSwipeRight: (offset){
-                  _addSwipe(SwipeDirection.right);
-                  fetchDog();
-                  blue_heart += 1;
-                  print(blue_heart);
-                  print("2131tttttttttttt656735436");
-                },
-                onSwipeLeft: (offset){
-                  _addSwipe(SwipeDirection.left);
-                  fetchDog();
-                  if(saveValue == 0){
-                    _red_heart += 1;
-                    print("weeeeeeeeeeeeeeee");
-                    print(_red_heart);
-                  }else{
-                    _red_heart= int.parse(saveValue.toString()) + 1;
-                    print("ewwwwwwwwwwwww");
-                    print(_red_heart);
-                  }
-
-                  saveData(_red_heart);
-                  print(_red_heart);
-                  print("2131tttttttttttt656735436");
-                },
-              )
+              // SizedBox(
+              //   height: 450,
+              //   child: SwipeDetector(
+              //     child: Container(
+              //       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              //       height: 400,
+              //       decoration: BoxDecoration(
+              //         border: Border.all(
+              //             color: Colors.black26,
+              //             width: 2.0,
+              //             style: BorderStyle.solid
+              //         ), //Border.all
+              //         borderRadius: BorderRadius.only(
+              //           topLeft: Radius.circular(10.0),
+              //           topRight: Radius.circular(10.0),
+              //           bottomLeft: Radius.circular(10.0),
+              //           bottomRight: Radius.circular(10.0),
+              //         ),
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: Colors.black12,
+              //             offset: const Offset(
+              //               1.0, 1.0,
+              //             ),
+              //             blurRadius: 10.0,
+              //             spreadRadius: 2.0,
+              //           ), //BoxShadow
+              //           BoxShadow(
+              //             color: Colors.white,
+              //             offset: const Offset(0.0, 0.0),
+              //             blurRadius: 0.0,
+              //             spreadRadius: 0.0,
+              //           ), //BoxShadow
+              //         ],
+              //         image: DecorationImage(
+              //           image: NetworkImage(_dog),
+              //           fit: BoxFit.cover
+              //         )
+              //       ),
+              //     ),
+              //     onSwipeDown: (offset){
+              //       _addSwipe(SwipeDirection.down);
+              //       fetchDog();
+              //       setState(() {
+              //         black_heart= black_heart + 1;
+              //       });
+              //       saveData(black_heart);
+              //       // black_heart += 1;
+              //       // print(black_heart);
+              //       // print("2131tttttttttttt656735436");
+              //     },
+              //     onSwipeRight: (offset){
+              //       _addSwipe(SwipeDirection.right);
+              //       fetchDog();
+              //       setState(() {
+              //         blue_heart= blue_heart + 1;
+              //       });
+              //       saveData(blue_heart);
+              //       // blue_heart += 1;
+              //       // print(blue_heart);
+              //       // print("2131tttttttttttt656735436");
+              //     },
+              //     onSwipeLeft: (offset){
+              //       _addSwipe(SwipeDirection.left);
+              //       fetchDog();
+              //       setState(() {
+              //         _red_heart= _red_heart + 1;
+              //       });
+              //       saveData(_red_heart);
+              //     },
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -240,14 +245,27 @@ class _MainScreenState extends State<MainScreen> {
   }
   Future<void> saveData(value) async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setInt('saveInt', _red_heart);
+    pref.setInt('saveRed', _red_heart);
+    pref.setInt('saveBlue', blue_heart);
+    pref.setInt('saveBlack', black_heart);
   }
 
   void getHeart() async{
     final SharedPreferences pref =await SharedPreferences.getInstance();
-    saveValue = pref.getInt('saveInt');
-    print(saveValue);
-    print('saveValue');
+    saveRedHeart= pref.getInt('saveRed');
+    saveBlueHeart= pref.getInt('saveBlue');
+    saveBlackHeart= pref.getInt('saveBlack');
+    if(saveRedHeart!=null){
+      _red_heart = saveRedHeart!;
+    }
+    if(saveBlueHeart!=null){
+      blue_heart = saveBlueHeart!;
+    }
+    if(saveBlackHeart!=null){
+      black_heart = saveBlackHeart!;
+    }
+    print(saveRedHeart);
+    print('saveRedHeart');
     setState(() {
 
     });
