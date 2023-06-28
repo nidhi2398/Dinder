@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,7 +22,11 @@ class _MainScreenState extends State<MainScreen> {
   int _red_heart = 0;
   int black_heart = 0;
   int blue_heart = 0;
-  var _dog = "";
+  int? saveValue;
+  var _dog = "https://images.dog.ceo/breeds/shihtzu/n02086240_4544.jpg";
+
+  static const int _swipeHistoryLimit = 4;
+  final List<SwipeDirection> _swipeHistory = [];
 
   void _handelClick() {
     fetchDog();
@@ -28,6 +34,11 @@ class _MainScreenState extends State<MainScreen> {
       _clicked = !_clicked;
     });
     print(_dog);
+  }
+
+  void initState(){
+    super.initState();
+    getHeart();
   }
 
   @override
@@ -73,7 +84,8 @@ class _MainScreenState extends State<MainScreen> {
                     Column(
                       children: [
                         Icon(CupertinoIcons.heart_solid,color: Colors.red, size: 36,),
-                        Text(_red_heart.toString(), style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600),)
+                        saveValue == null ? Text('0', style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600)):
+                        Text(saveValue.toString(), style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w600),)
                       ],
                     ),
                     Column(
@@ -112,7 +124,7 @@ class _MainScreenState extends State<MainScreen> {
               SizedBox(
                 height: 40,
               ),
-              SwipeTo(
+              SwipeDetector(
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   height: 400,
@@ -150,18 +162,36 @@ class _MainScreenState extends State<MainScreen> {
                     )
                   ),
                 ),
-                onLeftSwipe: () {
+                onSwipeDown: (offset){
+                  _addSwipe(SwipeDirection.down);
                   fetchDog();
-                  _red_heart += 1;
-                  print(_red_heart);
-                  print("65656565678787");
-                  print('Callback from Swipe To Left');
+                  black_heart += 1;
+                  print(black_heart);
+                  print("2131tttttttttttt656735436");
                 },
-                onRightSwipe: () {
+                onSwipeRight: (offset){
+                  _addSwipe(SwipeDirection.right);
                   fetchDog();
                   blue_heart += 1;
                   print(blue_heart);
-                  print('Callback from Swipe To Right');
+                  print("2131tttttttttttt656735436");
+                },
+                onSwipeLeft: (offset){
+                  _addSwipe(SwipeDirection.left);
+                  fetchDog();
+                  if(saveValue == 0){
+                    _red_heart += 1;
+                    print("weeeeeeeeeeeeeeee");
+                    print(_red_heart);
+                  }else{
+                    _red_heart= int.parse(saveValue.toString()) + 1;
+                    print("ewwwwwwwwwwwww");
+                    print(_red_heart);
+                  }
+
+                  saveData(_red_heart);
+                  print(_red_heart);
+                  print("2131tttttttttttt656735436");
                 },
               )
             ],
@@ -197,4 +227,30 @@ class _MainScreenState extends State<MainScreen> {
     // });
     // print("completeeeeeeeeeee");
   }
+
+  void _addSwipe(
+      SwipeDirection direction,
+      ) {
+    setState(() {
+      _swipeHistory.insert(0, direction);
+      if (_swipeHistory.length > _swipeHistoryLimit) {
+        _swipeHistory.removeLast();
+      }
+    });
+  }
+  Future<void> saveData(value) async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setInt('saveInt', _red_heart);
+  }
+
+  void getHeart() async{
+    final SharedPreferences pref =await SharedPreferences.getInstance();
+    saveValue = pref.getInt('saveInt');
+    print(saveValue);
+    print('saveValue');
+    setState(() {
+
+    });
+  }
+
 }
