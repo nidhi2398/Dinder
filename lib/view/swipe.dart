@@ -1,16 +1,14 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'dart:developer';
-
-import 'content.dart';
+import 'package:http/http.dart' as http;
 import 'example_buttons.dart';
-import 'example_candidate_model.dart';
-import 'example_card.dart';
+import 'dart:convert';
 
 class Swipe extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,14 +17,15 @@ class Swipe extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SwipePage(title: 'Swipe Cards Demo'),
+      // home: SwipePage(title: 'Swipe Cards Demo'),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class SwipePage extends StatefulWidget {
-  SwipePage({Key? key, this.title}) : super(key: key);
+  String email;
+  SwipePage(this.email,{Key? key, this.title}) : super(key: key);
 
   final String? title;
 
@@ -39,71 +38,41 @@ class _SwipePageState extends State<SwipePage> {
   MatchEngine? _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final AppinioSwiperController controller = AppinioSwiperController();
-  List<String> _names = [
-    "Red",
-    "Blue",
-    "Green",
-    "Yellow",
-    "Orange",
-    "Grey",
-    "Purple",
-    "Pink"
-  ];
-  List<Color> _colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-    Colors.grey,
-    Colors.purple,
-    Colors.pink
-  ];
+
+  int _red_heart = 0;
+  int black_heart = 0;
+  int blue_heart = 0;
+  int? saveRedHeart;
+  int? saveBlueHeart;
+  int? saveBlackHeart;
+  var _dog = "";
+
 
   @override
   void initState() {
-    for (int i = 0; i < _names.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], color: _colors[i]),
-          likeAction: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Liked ${_names[i]}"),
-              duration: Duration(milliseconds: 500),
-            ));
-          },
-          nopeAction: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Nope ${_names[i]}"),
-              duration: Duration(milliseconds: 500),
-            ));
-          },
-          superlikeAction: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Superliked ${_names[i]}"),
-              duration: Duration(milliseconds: 500),
-            ));
-          },
-          onSlideUpdate: (SlideRegion? region) async {
-            print("Region $region");
-          }));
-    }
-
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
     super.initState();
+    setState(() {
+      fetchDog();
+    });
+    // fetchDog();
   }
 
   @override
   Widget build(BuildContext context) {
-    return  CupertinoPageScaffold(
+    return CupertinoPageScaffold(
       child: Column(
         children: [
           const SizedBox(
             height: 50,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.75,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.65,
             child: AppinioSwiper(
-              backgroundCardsCount:3,
+              backgroundCardsCount:0,
               swipeOptions: const AppinioSwipeOptions.all(),
               unlimitedUnswipe: true,
               controller: controller,
@@ -116,32 +85,68 @@ class _SwipePageState extends State<SwipePage> {
                 left: 25,
                 right: 25,
                 top: 50,
-                bottom: 40,
+                bottom: 20,
               ),
               onEnd: _onEnd,
-              cardsCount: candidates.length,
+              cardsCount: 100,
               cardsBuilder: (BuildContext context, int index) {
-                return ExampleCard(candidate: candidates[index]);
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  height: 400,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.black26,
+                          width: 2.0,
+                          style: BorderStyle.solid
+                      ), //Border.all
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: const Offset(
+                            1.0, 1.0,
+                          ),
+                          blurRadius: 10.0,
+                          spreadRadius: 2.0,
+                        ), //BoxShadow
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: const Offset(0.0, 0.0),
+                          blurRadius: 0.0,
+                          spreadRadius: 0.0,
+                        ), //BoxShadow
+                      ],
+                      image: DecorationImage(
+                          image: NetworkImage(_dog),
+                          fit: BoxFit.cover
+                      )
+                  ),
+                );
               },
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 80,
-              ),
-              swipeLeftButton(controller),
-              const SizedBox(
-                width: 20,
-              ),
-              swipeRightButton(controller),
-              const SizedBox(
-                width: 20,
-              ),
-              unswipeButton(controller),
-            ],
-          )
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     const SizedBox(
+          //       width: 80,
+          //     ),
+          //     swipeLeftButton(controller),
+          //     const SizedBox(
+          //       width: 20,
+          //     ),
+          //     swipeRightButton(controller),
+          //     const SizedBox(
+          //       width: 20,
+          //     ),
+          //     // unswipeButton(controller),
+          //   ],
+          // )
         ],
       ),
     );
@@ -235,6 +240,8 @@ class _SwipePageState extends State<SwipePage> {
 
   void _swipe(int index, AppinioSwiperDirection direction) {
     log("the card was swiped to the: " + direction.name);
+    // Future.delayed()
+    fetchDog();
   }
 
   void _unswipe(bool unswiped) {
@@ -247,5 +254,21 @@ class _SwipePageState extends State<SwipePage> {
 
   void _onEnd() {
     log("end reached!");
+  }
+
+  void fetchDog() async {
+    print("11111111111111");
+    var dogUrgl = 'https://dog.ceo/api/breeds/image/random';
+    final uri = Uri.parse(dogUrgl);
+    var response = await http.get(uri);
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var parsedResponse = jsonResponse as Map<String, dynamic>;
+      setState(() {
+        _dog = parsedResponse['message'];
+        print(_dog);
+      });
+      print("2222222222222");
+    }
   }
 }

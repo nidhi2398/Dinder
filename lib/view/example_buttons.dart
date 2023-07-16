@@ -25,7 +25,9 @@ class ExampleButton extends StatelessWidget {
 //swipe card to the right side
 Widget swipeRightButton(AppinioSwiperController controller) {
   return ExampleButton(
-    onTap: () => controller.swipeRight(),
+    onTap: () =>
+        controller.swipeRight()
+    ,
     child: Container(
       height: 60,
       width: 60,
@@ -54,7 +56,16 @@ Widget swipeRightButton(AppinioSwiperController controller) {
 //swipe card to the left side
 Widget swipeLeftButton(AppinioSwiperController controller) {
   return ExampleButton(
-    onTap: () => controller.swipeLeft(),
+    onTap: (){
+      controller.swipeLeft();
+      int redHeart = 0;
+      redHeart += 1;
+      print(redHeart.toString() + " hhjhjhj");
+            // setState(() {
+            //   _red_heart= _red_heart + 1;
+            // });
+            // saveData(_red_heart);
+    },
     child: Container(
       height: 60,
       width: 60,
@@ -81,18 +92,18 @@ Widget swipeLeftButton(AppinioSwiperController controller) {
 }
 
 //unswipe card
-Widget unswipeButton(AppinioSwiperController controller) {
-  return ExampleButton(
-    onTap: () => controller.unswipe(),
-    child: Container(
-      height: 60,
-      width: 60,
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.rotate_left_rounded,
-        color: CupertinoColors.systemGrey2,
-        size: 40,
-      ),
-    ),
-  );
-}
+// Widget unswipeButton(AppinioSwiperController controller) {
+//   return ExampleButton(
+//     onTap: () => controller.unswipe(),
+//     child: Container(
+//       height: 60,
+//       width: 60,
+//       alignment: Alignment.center,
+//       child: const Icon(
+//         Icons.rotate_left_rounded,
+//         color: CupertinoColors.systemGrey2,
+//         size: 40,
+//       ),
+//     ),
+//   );
+// }

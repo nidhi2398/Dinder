@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
                     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white10),
                   ),
                   debugShowCheckedModeBanner: false,
-                  home: Swipe(),
+                  home: LoginScreen(),
                   // initialRoute: AppPages.INITIAL,
                   // getPages: AppPages.routes,
 

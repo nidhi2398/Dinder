@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swipe_cards/swipe_cards.dart';
 
 class MainScreen extends StatefulWidget {
   String email;
@@ -15,11 +18,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<dynamic> dogs = [];
+  // List<dynamic> dogs = [];
   bool _clicked = false;
   int _red_heart = 0;
   int black_heart = 0;
   int blue_heart = 0;
+  int count = 0;
   int? saveRedHeart;
   int? saveBlueHeart;
   int? saveBlackHeart;
@@ -27,6 +31,9 @@ class _MainScreenState extends State<MainScreen> {
 
   static const int _swipeHistoryLimit = 4;
   final List<SwipeDirection> _swipeHistory = [];
+  // MatchEngine? _matchEngine;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final AppinioSwiperController controller = AppinioSwiperController();
 
   void _handelClick() {
     fetchDog();
@@ -125,7 +132,102 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 50,
+              ),
+              SizedBox(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.65,
+                child: AppinioSwiper(
+                  backgroundCardsCount:0,
+                  swipeOptions: const AppinioSwipeOptions.only(left: true,right: true,bottom: true),
+                  unlimitedUnswipe: true,
+                  controller: controller,
+                  // unswipe: _unswipe,
+                  onSwiping: (AppinioSwiperDirection direction) {
+                    if(direction.toString() == "AppinioSwiperDirection.bottom"){
+                      black_heart += 1;
+                      setState(() {
+                        black_heart += 1;
+                      });
+                        print(black_heart);
+                        print("black_heart");
+                    }if(direction.toString() == "AppinioSwiperDirection.right"){
+                      setState(() {
+                        _red_heart +=1;
+                      });
+                      print(_red_heart);
+                      print("_red_heart");
+                    }if(direction.toString() == "AppinioSwiperDirection.left"){
+                      setState(() {
+                        blue_heart += 1;
+                      });
+                      print(blue_heart);
+                      print("blue_heart");
+                    }
+                    // // if(direction.toString() == "AppinioSwiperDirection.bottom"){
+                    // //   print(black_heart);
+                    // //   print("black_heart");
+                    //   fetchDog();
+                    //
+                    //   if(direction.toString() == "AppinioSwiperDirection.bottom"){
+                    //     count+=1;
+                    //     print(count.toString() + " __________");
+                    //   }
+                    // //   black_heart += 1;
+                    // //   print(black_heart.toString() + "  bbbbbbbb");
+                    // // }
+                    debugPrint(direction.toString() + "   nnnnnnnnnnn");
+                  },
+                  onSwipe: _swipe,
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    bottom: 50,
+                  ),
+                  // onEnd: _onEnd,
+                  cardsCount: 100,
+                  cardsBuilder: (BuildContext context, int index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                      height: 400,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black26,
+                              width: 2.0,
+                              style: BorderStyle.solid
+                          ), //Border.all
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            topRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              offset: const Offset(
+                                1.0, 1.0,
+                              ),
+                              blurRadius: 10.0,
+                              spreadRadius: 2.0,
+                            ), //BoxShadow
+                            BoxShadow(
+                              color: Colors.white,
+                              offset: const Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ), //BoxShadow
+                          ],
+                          image: DecorationImage(
+                              image: NetworkImage(_dog),
+                              fit: BoxFit.cover
+                          )
+                      ),
+                    );
+                  },
+                ),
               ),
               // SizedBox(
               //   height: 450,
@@ -220,29 +322,18 @@ class _MainScreenState extends State<MainScreen> {
       });
       print("2222222222222");
     }
-
-    // print("objectuuiuiuiuiu");
-    // const url = 'https://dog.ceo/api/breeds/image/random';
-    // final uri = Uri.parse(url);
-    // final response = await http.get(uri);
-    // final body = response.body;
-    // final json = jsonDecode(body);
-    // setState(() {
-    //   dogs = json['message'];
-    // });
-    // print("completeeeeeeeeeee");
   }
 
-  void _addSwipe(
-      SwipeDirection direction,
-      ) {
-    setState(() {
-      _swipeHistory.insert(0, direction);
-      if (_swipeHistory.length > _swipeHistoryLimit) {
-        _swipeHistory.removeLast();
-      }
-    });
-  }
+  // void _addSwipe(
+  //     SwipeDirection direction,
+  //     ) {
+  //   setState(() {
+  //     _swipeHistory.insert(0, direction);
+  //     if (_swipeHistory.length > _swipeHistoryLimit) {
+  //       _swipeHistory.removeLast();
+  //     }
+  //   });
+  // }
   Future<void> saveData(value) async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setInt('saveRed', _red_heart);
@@ -271,4 +362,21 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _swipe(int index, AppinioSwiperDirection direction) {
+    log("the card was swiped to the: " + direction.name);
+    // Future.delayed()
+    // fetchDog();
+  }
+
+  void _unswipe(bool unswiped) {
+    if (unswiped) {
+      log("SUCCESS: card was unswiped");
+    } else {
+      log("FAIL: no card left to unswipe");
+    }
+  }
+
+  void _onEnd() {
+    log("end reached!");
+  }
 }
