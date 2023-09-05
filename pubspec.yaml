@@ -1,4 +1,4 @@
-name: untitled
+name: dinder
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -38,15 +38,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
-  flutter_native_splash: ^2.3.1
+  flutter_native_splash: ^2.3.2
   flutter_screenutil: ^5.8.4
   get: ^4.6.5
-  firebase_messaging: ^14.6.4
   http: ^1.1.0
   flutter_swipe_detector: ^2.0.0
   shared_preferences: ^2.1.2
   swipe_cards: ^2.0.0+1
   appinio_swiper: ^2.0.2
+  firebase_messaging: ^14.6.7
 
 dev_dependencies:
   flutter_test:

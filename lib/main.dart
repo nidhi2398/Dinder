@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:dinder/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled/view/home_page_view.dart';
-import 'package:untitled/view/swipe.dart';
+import 'package:dinder/view/home_page_view.dart';
+import 'package:dinder/view/swipe.dart';
 
 
 Future<void> main() async{
@@ -39,7 +40,19 @@ class MyApp extends StatelessWidget {
     //   systemNavigationBarColor: Colors.white,
     //   systemNavigationBarIconBrightness: Brightness.dark
     // ));
-    FlutterNativeSplash.remove();
+
+    // Future.delayed(Duration(seconds: 20), () {
+      // code to be executed after 2 seconds
+    print('ready in 3...');
+    // await Future.delayed(const Duration(seconds: 1));
+    print('ready in 2...');
+    // await Future.delayed(const Duration(seconds: 1));
+    print('ready in 1...');
+    // await Future.delayed(const Duration(seconds: 1));
+    print('go!');
+      FlutterNativeSplash.remove();
+    // });
+
 
     return
     FutureBuilder(
@@ -75,7 +88,7 @@ class MyApp extends StatelessWidget {
                     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white10),
                   ),
                   debugShowCheckedModeBanner: false,
-                  home: LoginScreen(),
+                  home: SplashScreen(),
                   // initialRoute: AppPages.INITIAL,
                   // getPages: AppPages.routes,
 

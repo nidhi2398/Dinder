@@ -51,7 +51,7 @@ class _SwipePageState extends State<SwipePage> {
   @override
   void initState() {
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
-    super.initState();
+    // super.initState();
     setState(() {
       fetchDog();
     });

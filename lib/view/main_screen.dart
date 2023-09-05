@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void initState(){
-    super.initState();
+    // super.initState();
     fetchDog();
     getHeart();
   }
@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: <Color>[Color(0xff2d343c), Color(0xff49aea6)]
+                      colors: <Color>[Color(0xff000000), Color(0xff49aea6)]
                   ),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
@@ -87,7 +87,8 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20,vertical: 16),
+                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 16),
+                color: Colors.white,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -116,8 +117,9 @@ class _MainScreenState extends State<MainScreen> {
               Container(
                 height: 0.5,
                 width: MediaQuery.of(context).size.width,
+
                 decoration: BoxDecoration(
-                  color: Color(0xFF707070),
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black45,
@@ -148,6 +150,7 @@ class _MainScreenState extends State<MainScreen> {
                   onSwiping: (AppinioSwiperDirection direction) {
                     if(direction.toString() == "AppinioSwiperDirection.bottom"){
                       black_heart += 1;
+                      fetchDog();
                       setState(() {
                         black_heart += 1;
                       });
@@ -155,6 +158,7 @@ class _MainScreenState extends State<MainScreen> {
                         print("black_heart");
                     }if(direction.toString() == "AppinioSwiperDirection.right"){
                       setState(() {
+                        fetchDog();
                         _red_heart +=1;
                       });
                       print(_red_heart);
@@ -162,6 +166,7 @@ class _MainScreenState extends State<MainScreen> {
                     }if(direction.toString() == "AppinioSwiperDirection.left"){
                       setState(() {
                         blue_heart += 1;
+                        fetchDog();
                       });
                       print(blue_heart);
                       print("blue_heart");
@@ -229,6 +234,9 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
               ),
+              Container(
+                child: Text("ghghgsdhghdsghgs"),
+              )
               // SizedBox(
               //   height: 450,
               //   child: SwipeDetector(

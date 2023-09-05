@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:untitled/view/main_screen.dart';
-import 'package:untitled/view/swipe.dart';
+import 'package:dinder/view/main_screen.dart';
+import 'package:dinder/view/swipe.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,7 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 image: DecorationImage(
                   image: AssetImage('assets/images/primaryBg.png'),
                   fit: BoxFit.cover,
-                )),
+                )
+            ),
             child: Stack(
               children: <Widget>[
                 Positioned(
@@ -154,8 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color(0xFF024335),
                                 fontSize: 16,
                                 fontFamily: 'Poppins-Medium',
-                                fontWeight: FontWeight.w600),
-                          )),
+                                fontWeight: FontWeight.w600
+                            ),
+                          )
+                      ),
                       Positioned(
                           left: 46,
                           top: 361,
