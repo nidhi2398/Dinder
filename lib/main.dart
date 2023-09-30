@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dinder/view/firebase_api.dart';
 import 'package:dinder/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dinder/view/home_page_view.dart';
 import 'package:dinder/view/swipe.dart';
 
+import 'firebase_options.dart';
+
 
 Future<void> main() async{
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotiification();
   HttpOverrides.global = MyHttpOverrides();
   await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
